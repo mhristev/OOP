@@ -28,10 +28,8 @@ class Guitar{
 	public:
 	
 	void replaceString(float st, int pos){
-			
-				//printf("%f\n", st);
 				try{
-				str[pos].set_width(st);
+					str[pos].set_width(st);
 				}catch(const char* msg){	
 					printf("%s\n", msg);
 				}
