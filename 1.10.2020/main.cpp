@@ -4,17 +4,17 @@ using namespace std;
 
 
 class Student{
-	char* name;
+	string name;
 	int age;
 	
 	public:
 	
-	char* getName(){
+	string getName(){
 		return name;
 	}
 	
 	Student(string name, int age){
-		strcpy(this->name,name);
+		this->name = name;
 		this->age = age;
 	}
 	
@@ -22,8 +22,8 @@ class Student{
 		return age;
 	}
 	
-	void setName(char* name){
-		strcpy(this->name, name);
+	void setName(string name){
+		this->name = name;
 	
 	}
 	
