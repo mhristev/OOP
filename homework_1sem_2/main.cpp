@@ -28,11 +28,6 @@ public:
     string getTitle() {
         return title;
     }
-    virtual char getRating(){
-        return ' ';
-    }
-
-    virtual string getDirector(){ return "";}
 
 };
 
@@ -92,7 +87,7 @@ class Program: public Torrent {
     string version; // 3.11.5 major.minor.patch
 public:
     Program(string title_, int size_, string uploader_, int times_downloaded_, string creator_, string OS_, string version_): Torrent(title_, size_, uploader_, times_downloaded_),
-            creator(creator_), OS(OS_), version(version) {
+            creator(creator_), OS(OS_), version(version_) {
                 if (creator.length() == 0 || OS.length() == 0 || version.length() == 0)
                     throw "Invalid input in program!";
                 //TODO check version input
@@ -137,17 +132,18 @@ public:
         
     }
 
-    vector <Torrent*> search_games_by_rating(char rating) {
-        vector <Torrent*> games;
+    vector <Game*> search_games_by_rating(char rating) {
+        vector <Game*> games;
         int flag = 0;
-        int i = 0;
+       
         for (auto t : torrents) {
-                i++;
-            if (t->getRating() == rating) {
-                cout << "i am here" << i << endl;
-                games.push_back(t);
-                //games.push_back(t);
-                flag = 1;
+            Game *g = dynamic_cast<Game*>(t);
+            if (g) {
+                if (g->getRating() == rating) {
+                
+                    games.push_back(g);
+                    flag = 1;
+                }
             } 
         }
 
@@ -158,13 +154,18 @@ public:
 
     }
 
-    void search_by_director(string name) {
+    vector<Film*> search_by_director(string name) {
         cout << "+Searching director..." << endl;
-        for (auto i : torrents) {
-            if (i->getDirector().compare(name) == 0) {
-                cout << i->toString() << endl;
+        vector<Film*> films;
+        for (auto t : torrents) {
+            Film *f = dynamic_cast<Film*>(t);
+            if (f) {
+                if (f->getDirector().compare(name) == 0) {
+                    films.push_back(f);
+                }
             }
         }
+        return films;
     }
 /*
     void search_by_major(string major) {
@@ -188,13 +189,16 @@ int main() {
         Game game("swag", 10, "az", 10, "ne", 'M');
         Server serv;
         Film film("film", 12, "film", 10, "az", 100, "bg");
-        //Program prog("program", 10, "program", 1, "creator", "winwos", "as");
+        Program prog("program", 10, "program", 1, "creator", "winwos", "as");
        // serv.add_torrent(prog);
         serv.add_torrent(game);
         serv.add_torrent(tor);
         serv.add_torrent(film);
-        serv.search_by_title("ag");
-        //vector <Torrent*> torr = serv.search_games_by_rating('P');
+        //serv.search_by_title("ag");
+        vector <Game*> torr = serv.search_games_by_rating('M');
+        for (auto t : torr) {
+            cout << t->toString() << endl;
+        }
         //serv.search_by_director("az");
         //serv.search_by_major("23");
 
