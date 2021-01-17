@@ -29,6 +29,10 @@ public:
         return title;
     }
 
+    string getUploader() {
+        return uploader;
+    }
+
 };
 
 
@@ -48,7 +52,7 @@ public:
     Game(Game &game_): Torrent(game_), platform(game_.platform), maturity_rating(game_.maturity_rating) {} 
 
     string toString() {
-        string str = Torrent::toString() + "Platform: " + platform + ", Rating: " + maturity_rating + "\n+-------------------------------------------------------+\n";
+        string str = Torrent::toString() + "Platform: " + platform + ", Rating: " + maturity_rating + "\n+-------------------------------------------------------+";
         return str;
     }
 
@@ -72,7 +76,7 @@ public:
     Film(Film &film_): Torrent(film_), director(film_.director), length(film_.length), language(film_.language) {}
 
     string toString() {
-        string str = Torrent::toString() + "director: " + director + ", Length: " + to_string(length) + ", Language: " + language + "\n+-------------------------------------------------------+\n";
+        string str = Torrent::toString() + "director: " + director + ", Length: " + to_string(length) + ", Language: " + language + "\n+-------------------------------------------------------+";
         return str;
     }
 
@@ -90,14 +94,35 @@ public:
             creator(creator_), OS(OS_), version(version_) {
                 if (creator.length() == 0 || OS.length() == 0 || version.length() == 0)
                     throw "Invalid input in program!";
-                //TODO check version input
+                int p = 0;
+                int flag = 0;
+
+                for (int i = 0; i < version.size(); i++) {
+                    if (isalpha(version[i])){
+                        flag = 1;
+                    } else if (!isdigit(version[i])){
+                        p++;
+                    }
+                }
+
+                if (p != 2 || flag != 0) {
+                    throw "Non valid version!";
+                }
     }
 
     Program(Program &program_): Torrent(program_), creator(program_.creator), OS(program_.OS), version(program_.version) {}
 
     string toString() {
-        string str = Torrent::toString() + "Creator: " + creator + ", OS: " + OS + ", Version: " + version + "\n+-------------------------------------------------------+\n";
+        string str = Torrent::toString() + "Creator: " + creator + ", OS: " + OS + ", Version: " + version + "\n+-------------------------------------------------------+";
         return str;
+    }
+
+    string getMajor() {
+        char *vers = strdup(version.c_str());
+        char *token;
+        token = strtok(vers, ".");
+
+        return token;
     }
   
 };
@@ -109,7 +134,14 @@ class Server {
 public:
 
     void add_torrent(Torrent &t) {
+        for (int i = 0; i < users.size(); i++) {
+            if (t.getUploader().compare(users[i])) {
+                torrents.push_back(&t);
+                return;
+            }
+        } 
         torrents.push_back(&t);
+        //throw "This user is not in the server!";        
     }
 
     void add_user(string name) {
@@ -135,7 +167,8 @@ public:
     vector <Game*> search_games_by_rating(char rating) {
         vector <Game*> games;
         int flag = 0;
-       
+        cout << "+Searching for games..." << endl;
+
         for (auto t : torrents) {
             Game *g = dynamic_cast<Game*>(t);
             if (g) {
@@ -147,7 +180,7 @@ public:
             } 
         }
 
-        if (flag == 0)
+        if (games.empty())
             cout << "We didn't find this rating in the current torrents!" << endl;
         
         return games;
@@ -165,22 +198,41 @@ public:
                 }
             }
         }
+
+        if (films.empty())
+            cout << "We didn't find this director in the current torrents!" << endl;
+
         return films;
     }
-/*
-    void search_by_major(string major) {
+
+   vector<Program*> search_by_major(string major) {
+        vector<Program*> programs;
         cout << "+Searching major..." << endl;
-        for (auto i : torrents) {
-            if (i->getMajor().compare(major) == 0) {
-                cout << i->toString() << endl;
+        
+
+        for (auto t : torrents) {
+            Program *p = dynamic_cast<Program*>(t);
+            if (p) {
+                if (p->getMajor().compare(major) == 0) {
+                    programs.push_back(p);
+                }
             }
         }
+
+        if (programs.empty())
+            cout << "We didn't find this major in the current torrents!" << endl;
+
+        return programs;
     }
-*/
 
 };
-
-
+template<class T>
+ostream& operator<<(ostream& out, vector <T*> torr) {
+    for (auto i : torr) {
+        out << i->toString();
+    }
+    return out;
+}
 
 
 int main() {
@@ -189,18 +241,16 @@ int main() {
         Game game("swag", 10, "az", 10, "ne", 'M');
         Server serv;
         Film film("film", 12, "film", 10, "az", 100, "bg");
-        Program prog("program", 10, "program", 1, "creator", "winwos", "as");
-       // serv.add_torrent(prog);
+        Program prog("program", 10, "program", 1, "creator", "winwos", "1.23.7");
+        serv.add_torrent(prog);
         serv.add_torrent(game);
         serv.add_torrent(tor);
         serv.add_torrent(film);
-        //serv.search_by_title("ag");
         vector <Game*> torr = serv.search_games_by_rating('M');
-        for (auto t : torr) {
-            cout << t->toString() << endl;
-        }
+        //cout << torr << endl;
         //serv.search_by_director("az");
-        //serv.search_by_major("23");
+        vector <Program*> progr = serv.search_by_major("1");
+        //cout << progr << endl;
 
         
         
