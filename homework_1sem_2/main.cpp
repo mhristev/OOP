@@ -38,6 +38,24 @@ int main() {
               .add_torrent(adobe)
               .add_torrent(adobePhotoshop);
 
+        
+        vector <GameTorrent*> games = server.search_games_by_rating('M');
+        cout << games << endl;
+        vector<FilmTorrent*> films = server.search_by_director("Rian Johnson");
+        cout << films << endl;
+        vector <ProgramTorrent*> progr = server.search_by_major("1");
+        cout << progr << endl;
+
+        server.sort_by_alphabetical_order()
+              .print_torrents();
+        
+        server.sort_by_size()
+              .print_torrents();
+
+        server.sort_by_times_downloaded()
+              .print_torrents();
+        
+        
     } catch(const char* error) {
         cout << error << endl;
     }
