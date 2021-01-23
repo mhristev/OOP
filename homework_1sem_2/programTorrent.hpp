@@ -4,6 +4,7 @@
 #include "torrent.hpp"
 #include <string.h>
 #include <string>
+#include <vector>
 using namespace std;
 
 class ProgramTorrent: public Torrent {
@@ -16,6 +17,8 @@ public:
 
     string toString();
     string getMajor();
+    friend ostream& operator<<(ostream& out, vector <ProgramTorrent*> programs);
+
 };
 
 #endif

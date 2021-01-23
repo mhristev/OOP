@@ -3,6 +3,7 @@
 
 #include "torrent.hpp"
 #include <string>
+#include <vector>
 using namespace std;
 
 class GameTorrent: public Torrent {
@@ -14,6 +15,7 @@ public:
 
     string toString();
     char getRating();
+    friend ostream& operator<<(ostream& out, vector <GameTorrent*> games);
 };
 
 #endif

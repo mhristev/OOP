@@ -13,15 +13,17 @@ class Server {
     vector <Torrent*> torrents;
     vector <string> users;
 public:
-    void add_torrent(Torrent &t);
+    Server& add_torrent(Torrent &t);
     void add_user(string name);
 
     vector<Torrent*> search_by_title(string title);
     vector<GameTorrent*> search_games_by_rating(char rating);
     vector<FilmTorrent*> search_by_director(string name);
     vector<ProgramTorrent*> search_by_major(string major);
+    void print_torrents();
+    Server& sort_by_alphabetical_order();
+    Server& sort_by_size();
+    Server& sort_by_times_downloaded();
 };
 
-template<class T>
-ostream& operator<<(ostream& out, vector <T*> torr);
 #endif

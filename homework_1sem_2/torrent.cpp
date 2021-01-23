@@ -9,7 +9,7 @@ Torrent::Torrent(string title_, int size_, string uploader_, int times_downloade
 Torrent::Torrent(const Torrent& torr): size(torr.size), title(torr.title), uploader(torr.uploader), times_downloaded(torr.times_downloaded) {}
 
 string Torrent::toString() {
-        string str = "Title: " + title + ", Size: " + to_string(size) + ", Uploader: " + uploader + ", Downloaded: " + to_string(times_downloaded) + "\n";
+        string str = "Title: " + title + ", Size: " + to_string(size) + ", Uploader: " + uploader + ", Downloaded times: " + to_string(times_downloaded);
         return str;  
 }
 
@@ -20,3 +20,11 @@ string Torrent::getTitle() {
 string Torrent::getUploader() {
     return uploader;
 }
+
+int Torrent::getSize() {
+    return size;
+}
+int Torrent::getTimesDownloaded() {
+    return times_downloaded;
+}
+

@@ -2,6 +2,8 @@
 #define TORRENT_HPP
 
 #include <string>
+#include <vector>
+#include <iostream>
 using namespace std;
 
 class Torrent {
@@ -15,9 +17,9 @@ public:
     Torrent(const Torrent& torr);
 
     virtual string toString();
-
+    int getTimesDownloaded();
     string getTitle();
-
+    int getSize();
     string getUploader();
 
 };

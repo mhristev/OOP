@@ -12,7 +12,8 @@ ProgramTorrent::ProgramTorrent(string title_, int size_, string uploader_, int t
         if (isalpha(version[i])){
             flag = 1;
         } else if (!isdigit(version[i])){
-            p++;
+            if (version[i] == '.')
+                p++;
         }
     }
 
@@ -24,7 +25,7 @@ ProgramTorrent::ProgramTorrent(string title_, int size_, string uploader_, int t
 ProgramTorrent::ProgramTorrent(ProgramTorrent &program_): Torrent(program_), creator(program_.creator), OS(program_.OS), version(program_.version) {}
 
 string ProgramTorrent::toString() {
-    string str = Torrent::toString() + "Creator: " + creator + ", OS: " + OS + ", Version: " + version + "\n+-------------------------------------------------------+";
+    string str = Torrent::toString() + ", Creator: " + creator + ", OS: " + OS + ", Version: " + version;
     return str;
 }
 
@@ -36,3 +37,17 @@ string ProgramTorrent::getMajor() {
     return token;
 }
   
+ostream& operator<<(ostream& out, vector <ProgramTorrent*> programs) {
+    if (programs.empty()) {
+        return out;
+    }
+    cout << endl;
+    cout << "|------------------------------|" << endl;
+    cout << "|      Printing programs:      |" << endl;
+    cout << "|------------------------------|" << endl;
+    for (auto i : programs) {
+        out << i->toString() << endl;;
+    }
+    cout << endl;
+    return out;
+}
